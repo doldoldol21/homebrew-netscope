@@ -1,22 +1,18 @@
 # homebrew-netscope
 
-Homebrew tap for [netscope](https://github.com/doldoldol21/netscope) — a per-app
-network traffic monitor for macOS.
+Homebrew tap for [netscope](https://github.com/doldoldol21/netscope).
 
-## App (recommended)
+The app is easiest to install with the one-line installer (no Gatekeeper prompt):
 
 ```sh
-brew install --cask doldoldol21/netscope/netscope
+curl -fsSL https://raw.githubusercontent.com/doldoldol21/netscope/main/install.sh | bash
 ```
 
-Installs **netscope.app** to `/Applications`. Launch it — it lives in the menu
-bar, installs its capture helper on first run (one admin prompt), and shows your
-live ↓/↑ rate. (Not notarized yet: first launch needs right-click → Open.)
-
-## CLI / daemon only
+This tap provides the **CLI / daemon**, built from source:
 
 ```sh
 brew install doldoldol21/netscope/netscope-cli
 ```
 
-Builds `netscoped`, `netscope` and `netscope-bar` from source.
+Gives `netscoped`, `netscope` and `netscope-bar`. Manage the capture daemon with
+`sudo brew services start netscope-cli`.
