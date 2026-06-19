@@ -1,8 +1,8 @@
-class Netscope < Formula
+class NetscopeCli < Formula
   desc "Per-app network traffic monitor for macOS (menu bar + dashboard)"
   homepage "https://github.com/doldoldol21/netscope"
-  url "https://github.com/doldoldol21/netscope/archive/refs/tags/v0.1.0.tar.gz"
-  sha256 "033843b5d78aa5f9dc566e312306b949f34dd327161909a5165fcc9271a34236"
+  url "https://github.com/doldoldol21/netscope/archive/refs/tags/v0.1.1.tar.gz"
+  sha256 "d551e0bfeed0351ada47881b524097f9366d3545677589c3f73569677e1a673f"
   license "MIT"
   head "https://github.com/doldoldol21/netscope.git", branch: "main"
 
