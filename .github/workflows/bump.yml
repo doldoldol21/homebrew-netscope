@@ -1,0 +1,52 @@
+name: Bump to the latest netscope release
+
+# The tap follows netscope's GitHub Releases on its own: no secret in the
+# netscope repo, no cross-repo token. Every few hours (or on demand) this
+# reads the latest release, and if the cask is behind, rewrites the cask's
+# version + zip sha256 (from the release's checksums.txt) and the source
+# formula's tag tarball + sha256, then commits with the repo's own token.
+
+on:
+  schedule:
+    - cron: "17 */6 * * *"
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - name: Bump cask and formula if a newer release exists
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          repo=doldoldol21/netscope
+          tag=$(gh api "repos/$repo/releases/latest" --jq .tag_name)
+          ver=${tag#v}
+          cur=$(sed -n 's/^  version "\(.*\)"$/\1/p' Casks/netscope.rb)
+          echo "latest=$tag cask=$cur"
+          if [ "$ver" = "$cur" ]; then echo "up to date"; exit 0; fi
+
+          zip="netscope-$tag-app.zip"
+          base="https://github.com/$repo/releases/download/$tag"
+          sums=$(curl -fsSL "$base/checksums.txt")
+          zipsha=$(printf '%s\n' "$sums" | awk -v f="$zip" '$2==f || $2=="*"f {print tolower($1)}' | head -1)
+          [ ${#zipsha} -eq 64 ] || { echo "checksums.txt has no entry for $zip" >&2; exit 1; }
+          # The published sum is authoritative for the cask, but make sure the
+          # asset really is there before pointing users at it.
+          curl -fsSLI "$base/$zip" >/dev/null
+
+          tarsha=$(curl -fsSL "https://github.com/$repo/archive/refs/tags/$tag.tar.gz" | sha256sum | cut -d' ' -f1)
+
+          sed -i "s|^  version \".*\"$|  version \"$ver\"|; s|^  sha256 \".*\"$|  sha256 \"$zipsha\"|" Casks/netscope.rb
+          sed -i "s|archive/refs/tags/v[0-9.]*\.tar\.gz|archive/refs/tags/$tag.tar.gz|; s|^  sha256 \".*\"$|  sha256 \"$tarsha\"|" Formula/netscope-cli.rb
+
+          git diff --stat
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "netscope $tag"
+          git push
