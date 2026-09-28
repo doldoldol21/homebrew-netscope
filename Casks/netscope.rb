@@ -1,6 +1,6 @@
 cask "netscope" do
-  version "0.30.0"
-  sha256 "9e62dbce7ec627b69163de39d933771c59679b7676f819f1d9e2cbabe2bd7561"
+  version "0.30.1"
+  sha256 "f166118d1b11eecda4b23866e912a4df1a70f3a391bbf9949def9c5592d0f494"
 
   url "https://github.com/doldoldol21/netscope/releases/download/v#{version}/netscope-v#{version}-app.zip"
   name "netscope"
