@@ -7,7 +7,7 @@ cask "netscope" do
   desc "Per-app network traffic monitor for macOS"
   homepage "https://github.com/doldoldol21/netscope"
 
-  depends_on macos: ">= :big_sur"
+  depends_on macos: :big_sur
 
   app "netscope.app"
 
