@@ -11,6 +11,11 @@ cask "netscope" do
 
   app "netscope.app"
 
+  # Quit the running menu-bar app before its bundle is replaced; on upgrade,
+  # Homebrew reopens what it quit once the new version is in place. Without
+  # this the old build kept running over the new bundle.
+  uninstall quit: "io.netscope.app"
+
   # The app ships a root daemon (netscoped) inside the bundle; on first launch it
   # installs a root-owned copy under /Library/PrivilegedHelperTools and a launchd
   # service (one admin prompt). Later releases refresh that copy without a prompt.
