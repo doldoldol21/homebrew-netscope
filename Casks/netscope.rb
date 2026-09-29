@@ -11,10 +11,10 @@ cask "netscope" do
 
   app "netscope.app"
 
-  # Quit the running menu-bar app before its bundle is replaced; on upgrade,
-  # Homebrew reopens what it quit once the new version is in place. Without
-  # this the old build kept running over the new bundle.
-  uninstall quit: "io.netscope.app"
+  # No `uninstall quit:`. Homebrew quits through JXA's Application(<bundle id>),
+  # which reads an id ending in ".app" as an app *name*: once the app has quit
+  # the lookup fails, Homebrew times out on "did not quit" and never reopens
+  # it. The app instead relaunches itself when its bundle is replaced.
 
   # The app ships a root daemon (netscoped) inside the bundle; on first launch it
   # installs a root-owned copy under /Library/PrivilegedHelperTools and a launchd
